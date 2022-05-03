@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "functii.hpp"
 using namespace std;
 fstream fin;
 
@@ -12,7 +13,7 @@ int main()
 {
    string query;
    cout << "Inserati propozitia de cautat:\n";
-   cin >> query;
+   getline(cin, query);
    transform(query.begin(), query.end(), query.begin(), ::tolower); // transformam in litere mici
 
    int apQuery[26];
@@ -32,23 +33,12 @@ int main()
       for (char &c : cuvant)
          apCuv[c - 'a'] ++;
 
-      bool pastram = true;
-      for (int i = 0; i < 26; ++i)
-         if (apCuv[i] > apQuery[i])
-         {
-            pastram = false;
-            break;
-         }
-
-      if (pastram)
+      if (frecventaCorecta(apCuv, apQuery))
          cuv.push_back({cuvant, apCuv});
-      else
-         delete apCuv;
    }
-   
-   
-      
-   cuv.clear();
    fin.close();
+   
+   afisarePropozitii(cuv, apQuery);
+   
    return 0;
 }
