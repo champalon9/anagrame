@@ -6,7 +6,7 @@
 using namespace std;
 fstream fin;
 
-vector<string> cuv;
+vector<pair<string, int*>> cuv; // <"cuvant", [aparitii cuvant]>
 
 int main()
 {
@@ -15,21 +15,20 @@ int main()
    cin >> query;
    transform(query.begin(), query.end(), query.begin(), ::tolower); // transformam in litere mici
 
-   int apQuery[26], apCuv[26];
+   int apQuery[26];
    fill(apQuery, apQuery + 26, 0);
    for (char &c : query)
       if (isalpha(c))
          apQuery[c - 'a'] ++;
 
-   // luam cuvintele din fisier care contin macar o litera din query
-   // agares = query
-   // aaaa = cuvant
-
+   // luam cuvintele din fisier care contin toate literele in query pentru care frecventa unei litere in cuvant este mai mare sau egala decat frecventa literei in query
    fin.open("cuvinte_ro.txt", ios::in);
    string cuvant;
    while (fin >> cuvant)
    {
+      int *apCuv = new int[26];
       fill(apCuv, apCuv + 26, 0);
+
       for (char &c : cuvant)
          apCuv[c - 'a'] ++;
 
@@ -42,9 +41,14 @@ int main()
          }
 
       if (pastram)
-         cuv.push_back(cuvant);
+         cuv.push_back({cuvant, apCuv});
+      else
+         delete apCuv;
    }
    
-   for (int i = 0; i < 20; ++i)
-      cout << cuv[i] << '\n';
+   
+      
+   cuv.clear();
+   fin.close();
+   return 0;
 }
